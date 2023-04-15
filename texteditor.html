@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text editor with Vue</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+</head>
+<body>
+    <div id="app">
+        <div v-for="(block, index) in blocks" :key="index">
+            <div class="form-group">
+                <label>Text Color:</label>
+                <input type="color" v-modal="block.color" style="margin-left: 20px" @input="updateBlockContent(index, 'color', $event.target.value)"/>
+            </div><br>
+            <div class="form-group">
+                <label>Background Color:</label>
+                <input type="color" v-model="block.background" style="margin-left: 20px"/>
+            </div><br>
+            <div class="form-group">
+                <label>Font:</label>
+                <select v-model="block.font"style="margin-left: 20px" >
+                    <option value="Arial">Arial</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Lucida Console">Lucida Console</option>
+                </select>
+            </div><br>
+            <div class="form-group">
+                <label>Font Size:</label>
+                <input type="number" v-model="block.fontSize" style="margin-left: 20px" />
+
+            </div><br>
+            <div class="form-group">
+                <label>Font Style:</label>
+                <input type="checkbox" v-model="block.fontStyle.italic" style="margin-left: 20px" /> Italic
+                <input type="checkbox" v-model="block.fontStyle.bold" /> Bold
+
+            </div><br>
+            <div class="form-group">
+                <label>Text:</label>
+                <textarea  v-model="block.text" style="margin-left: 20px;width: 300px;height: 150px;"  ></textarea>
+            </div><br>
+
+        </div>
+        <button @click="addBlock">Add Block</button>
+        <button @click="removeBlock">Remove Block</button>
+        <div><br>
+            <h2>Preview:</h2>
+            <div v-for="(block, index) in blocks" :key="index" :style="{ color: block.color, backgroundColor: block.background, fontFamily: block.font, fontStyle: block.fontStyle.italic ? 'italic' : 'normal', fontWeight: block.fontStyle.bold ? 'bold' : 'normal', fontSize: block.fontSize + 'px' }">
+                {{ block.text }}
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+   <script>
+     const app = Vue.createApp({
+        data() {
+            return {
+                blocks: [
+                    {
+                        color: '#000000',
+                        background: '#FFFFFF',
+                        font: 'Arial',
+                        fontSize: 14,
+                        fontStyle: {
+                            italic: false,
+                            bold: false
+                        },
+                        text: ''
+                    }
+                ]
+            }
+        },
+        methods: {
+            addBlock() {
+                this.blocks.push({
+                    color: '#000000',
+                    background: '#FFFFFF',
+                    font: 'Arial',
+                    fontSize: 14,
+                    fontStyle: {
+                        italic: false,
+                        bold: false
+                    },
+                    text:''
+                })
+            },
+            removeBlock(){
+                if(this.blocks.length > 1) {
+                    this.blocks.pop()
+                }
+            },
+            updateBlockContent(blockIndex, property, value) {
+                this.blocks[blockIndex][property]=value;
+                this.blocks=[...this.blocks];
+            }
+        }
+     })
+     app.mount('#app')
+   </script>
+
+
+
+</html>
